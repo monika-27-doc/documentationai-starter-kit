@@ -69,7 +69,8 @@
                 "path": "components/tabs",
                 "icon": "columns"
               }
-            ]
+            ],
+            "openapi": "api-reference/playground-upload-test.yaml"
           }
         ]
       },
