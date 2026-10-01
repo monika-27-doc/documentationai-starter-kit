@@ -217,6 +217,95 @@
 .dt-note { display: block; margin: 0 !important; font-size: 12px; color: var(--dt-muted); }
 .dt-note a { color: var(--dt-ink) !important; }
 
+/* Upload source card, from the "1 · Tabs" board in Source modal prototypes */
+.dt-home {
+  --dt-accent: #ec5b5b;
+  --dt-accent-hover: #e14e4e;
+  --dt-seg-bg: #f1f0ef;
+  --dt-seg-on: #ffffff;
+  --dt-dash: #dcdad6;
+  --dt-placeholder: #a19f9b;
+  --dt-focus: rgba(35, 131, 226, 0.25);
+}
+.dark .dt-home,
+[data-theme="dark"] .dt-home {
+  --dt-seg-bg: #2a2927;
+  --dt-seg-on: #3a3936;
+  --dt-dash: #4a4945;
+  --dt-placeholder: #8a8884;
+}
+.dt-upload {
+  max-width: 560px;
+  width: 100%;
+  align-self: center;
+  border: 1px solid var(--dt-line);
+  border-radius: 12px;
+  background: var(--dt-surface);
+  box-shadow: 0 8px 24px rgba(25, 21, 14, 0.06);
+  padding: 18px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+}
+.dt-upload-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.dt-upload-title { font-size: 15px; font-weight: 600; color: var(--dt-ink); }
+.dt-upload-tag {
+  height: 22px; padding: 0 8px; border-radius: 6px;
+  display: inline-flex; align-items: center;
+  font-size: 12px; font-weight: 500;
+  background: var(--dt-gray-bg); color: var(--dt-gray-fg);
+}
+.dt-seg { display: inline-flex; align-self: flex-start; padding: 3px; gap: 2px; border-radius: 9px; background: var(--dt-seg-bg); }
+.dt-home .dt-seg-item {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 28px; padding: 0 12px; border-radius: 6px;
+  border: 0 !important; background: none; cursor: pointer;
+  font: 500 13px/1 Inter, system-ui, sans-serif;
+  color: var(--dt-muted);
+}
+.dt-home .dt-seg-item:hover { color: var(--dt-ink); }
+.dt-home .dt-seg-item.dt-seg-on {
+  background: var(--dt-seg-on); color: var(--dt-ink);
+  box-shadow: 0 1px 2px rgba(25, 21, 14, 0.08), 0 0 0 1px rgba(42, 28, 0, 0.06);
+}
+.dt-upload-body { min-height: 220px; display: flex; flex-direction: column; }
+.dt-drop {
+  flex-grow: 1;
+  border: 1.5px dashed var(--dt-dash); border-radius: 10px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; padding: 16px; text-align: center;
+}
+.dt-drop-icon {
+  width: 40px; height: 40px; border-radius: 9999px; margin-bottom: 8px;
+  display: grid; place-items: center;
+  background: var(--dt-seg-bg); color: var(--dt-muted);
+}
+.dt-drop-title { font-size: 13.5px; font-weight: 500; color: var(--dt-ink); }
+.dt-drop-sub, .dt-web-help { font-size: 12px; line-height: 17px; color: var(--dt-muted); }
+.dt-web { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; }
+.dt-web-fields { display: flex; flex-direction: column; gap: 6px; }
+.dt-web-label { font-size: 12px; font-weight: 500; color: var(--dt-ink); }
+.dt-home .dt-field {
+  height: 34px; width: 100%; box-sizing: border-box;
+  border: 1px solid var(--dt-line); border-radius: 6px; padding: 0 10px;
+  font: 13px Inter, system-ui, sans-serif; color: var(--dt-ink);
+  background: var(--dt-surface); outline: none;
+}
+.dt-home .dt-field:focus { border-color: var(--dt-muted); box-shadow: 0 0 0 3px var(--dt-focus); }
+.dt-home .dt-field::placeholder { color: var(--dt-placeholder); }
+.dt-web-actions { display: flex; justify-content: flex-end; }
+.dt-home .dt-btn-primary {
+  height: 32px; padding: 0 12px; border-radius: 6px; border: 0 !important; cursor: pointer;
+  font: 500 13px Inter, system-ui, sans-serif; color: #ffffff;
+  background: var(--dt-accent); box-shadow: 0 1px 2px rgba(25, 21, 14, 0.06);
+}
+.dt-home .dt-btn-primary:hover { background: var(--dt-accent-hover); }
+.dt-home .dt-btn-primary:disabled { opacity: 0.5; cursor: default; }
+.dt-home .dt-seg-item:focus-visible,
+.dt-home .dt-btn-primary:focus-visible { outline: 2px solid #2383e2; outline-offset: 1px; }
+.dt-upload-note { font-size: 12px; color: var(--dt-muted); text-align: center; }
+
 /* Phone width: drop the count column, let the pill wrap under the name */
 @media (max-width: 640px) {
   .dt-row { grid-template-columns: 36px minmax(0, 1fr) 20px; row-gap: 8px; }

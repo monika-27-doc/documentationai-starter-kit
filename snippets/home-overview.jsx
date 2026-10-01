@@ -1,6 +1,10 @@
 export const description = "Home page overview, styled after the External Sources documents-list design"
 
 export const HomeOverview = () => {
+  const [tab, setTab] = React.useState("pdf")
+  const [url, setUrl] = React.useState("")
+  const [tried, setTried] = React.useState(false)
+
   const icons = {
     zap: <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />,
     layers: <><path d="m12 2 10 5-10 5L2 7z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></>,
@@ -72,6 +76,45 @@ export const HomeOverview = () => {
         </a>
         <span className="dt-empty-note">or see what's new in the <a href="/changelog">Changelog</a></span>
       </div>
+
+      <section className="dt-upload" aria-labelledby="dt-upload-title">
+        <div className="dt-upload-head">
+          <span id="dt-upload-title" className="dt-upload-title">Upload source</span>
+          <span className="dt-upload-tag">Preview</span>
+        </div>
+        <div className="dt-seg" role="tablist" aria-label="Kind of source">
+          <button type="button" role="tab" aria-selected={tab === "pdf"} className={"dt-seg-item" + (tab === "pdf" ? " dt-seg-on" : "")} onClick={() => setTab("pdf")}>
+            <Svg size={14}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /></Svg>
+            <span>PDF</span>
+          </button>
+          <button type="button" role="tab" aria-selected={tab === "web"} className={"dt-seg-item" + (tab === "web" ? " dt-seg-on" : "")} onClick={() => setTab("web")}>
+            <Svg size={14}><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></Svg>
+            <span>Website</span>
+          </button>
+        </div>
+        <div className="dt-upload-body" role="tabpanel">
+          {tab === "pdf" ? (
+            <div className="dt-drop">
+              <span className="dt-drop-icon"><Svg size={18}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M12 12v6" /><path d="m15 15-3-3-3 3" /></Svg></span>
+              <span className="dt-drop-title">Drop PDFs here, or browse</span>
+              <span className="dt-drop-sub">Several at once. Up to 50 MB and 500 pages each.</span>
+            </div>
+          ) : (
+            <div className="dt-web">
+              <div className="dt-web-fields">
+                <label htmlFor="dt-url" className="dt-web-label">Address</label>
+                <input id="dt-url" className="dt-field" type="url" placeholder="https://docs.example.com/guides" value={url} onChange={(e) => { setUrl(e.target.value); setTried(false) }} />
+                <span className="dt-web-help">A single page, or a section and the pages under it. Up to 5 websites, 300 pages each.</span>
+                {tried ? <span className="dt-web-help" role="status">This is a preview, so nothing is sent from this page.</span> : null}
+              </div>
+              <div className="dt-web-actions">
+                <button type="button" className="dt-btn-primary" disabled={url.trim().length === 0} onClick={() => setTried(true)}>Continue</button>
+              </div>
+            </div>
+          )}
+        </div>
+        <span className="dt-upload-note">A preview of the Upload source dialog. Nothing is uploaded from this page.</span>
+      </section>
     </div>
   )
 }
