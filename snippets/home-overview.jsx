@@ -59,6 +59,19 @@ export const HomeOverview = () => {
       </div>
 
       <span className="dt-note">This site ships with placeholder content. Edit the text, links and examples so they match your product before sharing it.</span>
+
+      <div className="dt-empty">
+        <div className="dt-empty-icon">
+          <Svg><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></Svg>
+        </div>
+        <span className="dt-empty-title">Can't find what you need?</span>
+        <span className="dt-empty-text">Browse the Help Center for FAQs, step-by-step guides and fixes for common problems.</span>
+        <a className="dt-btn" href="/help-center">
+          <Svg width={2} size={15}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></Svg>
+          <span>Open Help Center</span>
+        </a>
+        <span className="dt-empty-note">or see what's new in the <a href="/changelog">Changelog</a></span>
+      </div>
     </div>
   )
 }
