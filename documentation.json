@@ -21,7 +21,9 @@
               {
                 "title": "Introduction",
                 "path": "introduction",
-                "icon": "home"
+                "icon": "home",
+                "show-toc": false,
+                "content-width": "wide"
               },
               {
                 "title": "Quickstart",
@@ -151,5 +153,10 @@
         ]
       }
     ]
-  }
+  },
+  "customCss": [
+    {
+      "src": "styles/home.css"
+    }
+  ]
 }
