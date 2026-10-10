@@ -1,0 +1,49 @@
+---
+title: Rate limits
+description: >-
+  How many API requests each plan can make, how limits are counted, and what to
+  do when you reach one.
+---
+import LimitsTable from "/snippets/limits-table.mdx"
+
+Every API key has a rate limit set by your plan. Limits protect the API for everyone and are counted per workspace, across all of its keys.
+
+## Limits by plan
+
+<LimitsTable />
+
+## How limits are counted
+
+- **Per minute** limits use a rolling 60-second window.
+- **Per day** limits reset at 00:00 UTC.
+- **Concurrent requests** counts requests that have started and not yet returned.
+
+Requests that fail with a `4xx` error still count. Requests that fail with a `5xx` error don't.
+
+## Rate limit headers
+
+Every response includes your current limits:
+
+| Header                  | Meaning                                |
+| ----------------------- | -------------------------------------- |
+| `X-RateLimit-Limit`     | Requests allowed in the current window |
+| `X-RateLimit-Remaining` | Requests left in the current window    |
+| `X-RateLimit-Reset`     | Seconds until the window resets        |
+
+## When you reach a limit
+
+The API returns `429 Too Many Requests` with a `Retry-After` header. Wait that many seconds, then retry.
+
+```bash
+curl -i https://api.example.com/v1/projects \
+  -H "Authorization: Bearer $API_KEY"
+
+# HTTP/1.1 429 Too Many Requests
+# Retry-After: 12
+```
+
+Retry with exponential backoff rather than a fixed delay, and spread batch jobs across the day.
+
+## Raising your limits
+
+Upgrade your plan from **Settings > Billing**, or contact sales for custom Enterprise limits. See [Plans and billing](/plans-and-billing).

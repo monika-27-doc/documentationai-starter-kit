@@ -1,0 +1,35 @@
+---
+title: Errors
+description: >-
+  The HTTP status codes the API returns, what each one means, and how to handle
+  them.
+---
+import LimitsTable from "/snippets/limits-table.mdx"
+
+The API uses standard HTTP status codes. Every error response has a JSON body with a `code` and a `message`.
+
+```json
+{
+  "code": "rate_limited",
+  "message": "Too many requests. Retry after 12 seconds."
+}
+```
+
+## Status codes
+
+| Status | Code              | Meaning                               |
+| ------ | ----------------- | ------------------------------------- |
+| `400`  | `invalid_request` | A parameter is missing or invalid     |
+| `401`  | `unauthorized`    | The API key is missing or invalid     |
+| `403`  | `forbidden`       | The key can't access this resource    |
+| `404`  | `not_found`       | The resource doesn't exist            |
+| `429`  | `rate_limited`    | You've reached your plan's rate limit |
+| `500`  | `server_error`    | Something went wrong on our side      |
+
+## 429 Too Many Requests
+
+You've sent more requests than your plan allows. Wait for the number of seconds in the `Retry-After` header, then retry. These are the limits for each plan:
+
+<LimitsTable />
+
+See [Rate limits](/rate-limits) for how limits are counted.

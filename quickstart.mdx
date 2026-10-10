@@ -2,6 +2,8 @@
 title: Quickstart
 description: Minimal steps to customize this sample starter kit.
 ---
+import LimitsTable from "/snippets/limits-table.mdx"
+
 ## Overview
 
 <Callout kind="alert" collapsed="false">
@@ -31,18 +33,22 @@ description: Minimal steps to customize this sample starter kit.
 ## Example onboarding flow (replace with yours)
 
 1. Sign up for an account and verify your email.
-
 2. Create your first workspace, project, or environment.
-
 3. Add one integration or data source to connect your existing tools.
-
 4. Complete a guided action (for example, run your first job or publish your first resource).
-
 5. Invite a teammate and assign a basic role or permission.
 
 ## 3. Connect API Reference (optional)
 
 If you have an API, replace `openapi.yaml` with your real OpenAPI file. If you do not need an API reference, remove that tab either from dashboard or  `documentation.json`.
+
+## API limits
+
+Every plan has its own API rate limits. Keep these in mind when you script your first requests:
+
+<LimitsTable />
+
+See [Rate limits](/rate-limits) for how they are counted.
 
 ## Next steps
 
@@ -55,4 +61,3 @@ If you have an API, replace `openapi.yaml` with your real OpenAPI file. If you d
     Add your real auth flows and security notes.
   </Card>
 </Columns>
-

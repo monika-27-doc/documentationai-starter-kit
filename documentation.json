@@ -88,6 +88,26 @@
                 "title": "Authentication",
                 "path": "authentication",
                 "icon": "lock"
+              },
+              {
+                "title": "Rate limits",
+                "path": "rate-limits",
+                "icon": "gauge"
+              },
+              {
+                "title": "Errors",
+                "path": "errors",
+                "icon": "alert-circle"
+              },
+              {
+                "title": "Usage and quotas",
+                "path": "usage-and-quotas",
+                "icon": "bar-chart-3"
+              },
+              {
+                "title": "Plans and billing",
+                "path": "plans-and-billing",
+                "icon": "credit-card"
               }
             ]
           },
@@ -114,6 +134,10 @@
               {
                 "title": "Documentation Source",
                 "path": "help-center/faq/getting-started"
+              },
+              {
+                "title": "Why am I getting 429 errors?",
+                "path": "help-center/faq/rate-limit-errors"
               }
             ]
           },

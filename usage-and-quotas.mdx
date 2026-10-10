@@ -1,0 +1,33 @@
+---
+title: Usage and quotas
+description: >-
+  Track your workspace's API usage against your plan's limits, and get alerted
+  before you reach them.
+---
+import LimitsTable from "/snippets/limits-table.mdx"
+
+Your workspace's usage page shows how many requests you've made today and this minute, compared with your plan's limits.
+
+## Your plan's quotas
+
+<LimitsTable />
+
+## Check your usage
+
+<Steps>
+  <Step title="Open the usage page" icon="bar-chart-3" title-type="p">
+    In the app, go to **Settings > Usage**.
+  </Step>
+
+  <Step title="Read the meter" icon="gauge" title-type="p">
+    The meter shows today's requests against your daily limit. It turns amber at 80% and red at 100%.
+  </Step>
+
+  <Step title="Set an alert" icon="bell" title-type="p">
+    Click **Alerts** to get an email when you reach 80% of any limit.
+  </Step>
+</Steps>
+
+## Check usage from the API
+
+Every response includes `X-RateLimit-Remaining`. See [Rate limits](/rate-limits#rate-limit-headers).

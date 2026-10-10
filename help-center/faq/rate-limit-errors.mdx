@@ -1,0 +1,18 @@
+---
+title: Why am I getting 429 errors?
+description: What a 429 Too Many Requests error means and how to stop seeing it.
+---
+import LimitsTable from "/snippets/limits-table.mdx"
+
+A `429 Too Many Requests` error means your workspace has used up its rate limit for the current minute or day.
+
+## Check your plan's limits
+
+<LimitsTable />
+
+## Fix it
+
+- Wait for the number of seconds in the `Retry-After` header, then retry.
+- Retry with exponential backoff instead of a fixed delay.
+- Check **Settings > Usage** to see which limit you reached.
+- If you reach your limits often, upgrade your plan. See [Plans and billing](/plans-and-billing).
