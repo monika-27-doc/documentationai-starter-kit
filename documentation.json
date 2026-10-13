@@ -203,6 +203,7 @@
       ],
       "breadcrumb": false
     },
-    "language": "es"
+    "language": "es",
+    "robots:index": false
   }
 }
