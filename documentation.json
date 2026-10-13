@@ -186,17 +186,35 @@
   "seo": {
     "jsonld": {
       "organization": {
+        "@id": "https://orama.ai/#organization",
         "name": "Orama",
+        "legalName": "Orama Inc.",
         "url": "https://orama.ai",
-        "logo": "https://academy.orama.ai/images/orama-logo-color.png",
+        "logo": "https://orama.ai/logo-color.png",
         "sameAs": [
-          "https://www.linkedin.com/company/YOUR-COMPANY-PAGE",
-          "https://www.youtube.com/@YOUR-CHANNEL"
+          "https://www.linkedin.com/company/orama",
+          "https://www.youtube.com/@orama"
         ]
       },
+      "website": {
+        "alternateName": "Orama Academy"
+      },
+      "webpage": {
+        "isAccessibleForFree": true
+      },
       "article": {
-        "@type": "TechArticle"
-      }
-    }
+        "@type": "TechArticle",
+        "proficiencyLevel": "Beginner"
+      },
+      "extra": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Orama",
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "Web"
+        }
+      ]
+    },
+    "language": "es"
   }
 }
