@@ -182,5 +182,21 @@
     {
       "src": "styles/home.css"
     }
-  ]
+  ],
+  "seo": {
+    "jsonld": {
+      "organization": {
+        "name": "Orama",
+        "url": "https://orama.ai",
+        "logo": "https://academy.orama.ai/images/orama-logo-color.png",
+        "sameAs": [
+          "https://www.linkedin.com/company/YOUR-COMPANY-PAGE",
+          "https://www.youtube.com/@YOUR-CHANNEL"
+        ]
+      },
+      "article": {
+        "@type": "TechArticle"
+      }
+    }
+  }
 }
