@@ -216,5 +216,47 @@
       ]
     },
     "language": "es"
-  }
+  },
+  "redirects": [
+    {
+      "source": "/e2e-old-quickstart",
+      "destination": "/quickstart",
+      "statusCode": 308
+    },
+    {
+      "source": "/e2e-explicit",
+      "destination": "/quickstart",
+      "statusCode": 308
+    },
+    {
+      "source": "/e2e-explicit.md",
+      "destination": "/components.md",
+      "statusCode": 308
+    },
+    {
+      "source": "/e2e-anchor",
+      "destination": "/components#quick-component-tour",
+      "statusCode": 308
+    },
+    {
+      "source": "/e2e-dest-query",
+      "destination": "/quickstart?tab=web",
+      "statusCode": 308
+    },
+    {
+      "source": "/e2e-external",
+      "destination": "https://example.com/moved",
+      "statusCode": 308
+    },
+    {
+      "source": "/e2e-root",
+      "destination": "/",
+      "statusCode": 307
+    },
+    {
+      "source": "/e2e-blog/:slug",
+      "destination": "/:slug",
+      "statusCode": 308
+    }
+  ]
 }
