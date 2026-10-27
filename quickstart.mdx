@@ -45,12 +45,13 @@ Kestrel runs your background work: emails, exports, webhooks, anything that shou
   <Step title="Queue your first job" icon="send" title-type="p">
     A job has a `type` your workers know how to handle and a JSON `payload`. Kestrel returns the job straight away with the status `queued`.
 
-    <CodeGroup tabs="cURL,Node.js,Python">
+    <CodeGroup tabs="cURL,Node.js,Python,Go">
     ```bash
     curl https://api.kestrel.dev/v1/jobs \
       -H "Authorization: Bearer $KESTREL_API_KEY" \
       -H "Content-Type: application/json" \
-      -d '{"type": "send-welcome-email", "payload": {"userId": "usr_8f2k"}}'
+      -d '{"type": "send-welcome-email",
+           "payload": {"userId": "usr_8f2k"}}'
     ```
 
     ```javascript
@@ -73,6 +74,15 @@ Kestrel runs your background work: emails, exports, webhooks, anything that shou
         type="send-welcome-email",
         payload={"userId": "usr_8f2k"},
     )
+    ```
+
+    ```go
+    client := kestrel.New(os.Getenv("KESTREL_API_KEY"))
+
+    job, err := client.Jobs.Create(ctx, kestrel.JobParams{
+        Type:    "send-welcome-email",
+        Payload: map[string]any{"userId": "usr_8f2k"},
+    })
     ```
     </CodeGroup>
   </Step>
