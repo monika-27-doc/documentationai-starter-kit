@@ -1,64 +1,108 @@
 ---
 title: Quickstart
-description: Minimal steps to customize this sample starter kit.
+description: Create an API key, install an SDK and queue your first background job in about five minutes.
 ---
-import LimitsTable from "/snippets/limits-table.mdx"
 
-## Overview
+Kestrel runs your background work: emails, exports, webhooks, anything that shouldn't block a request. This guide takes you from a new account to a finished job.
 
-<Callout kind="alert" collapsed="false">
-  This site ships with placeholder content. Use this quickstart to replace it with your real product docs.
+<Callout kind="info" collapsed="false">
+  You need a Kestrel account. The Free plan includes 10,000 requests a day, which is plenty for this guide.
 </Callout>
 
-## 1. Update a page
-
 <Steps>
-  <Step title="Edit introduction" icon="edit" title-type="p">
-    Replace the sample introduction with a concise overview of your product and the key actions you want new users to take first.
+  <Step title="Create an API key" icon="key" title-type="p">
+    In the Kestrel app, go to **Settings > API keys** and click **Create key**. Choose the **Test** environment and copy the key. It starts with `kst_test_`.
+
+    ```bash
+    export KESTREL_API_KEY="kst_test_..."
+    ```
   </Step>
 
-  <Step title="Preview your change" icon="monitor" title-type="p">
-    Use your dashboard board editor to confirm the updated introduction looks and reads as expected.
+  <Step title="Install an SDK" icon="package" title-type="p">
+    Kestrel has official SDKs for Node.js, Python and Go. You can also call the REST API directly.
+
+    <Tabs>
+      <Tab title="Node.js" icon="hexagon">
+        ```bash
+        npm install @kestrel/sdk
+        ```
+      </Tab>
+
+      <Tab title="Python" icon="file-code">
+        ```bash
+        pip install kestrel-sdk
+        ```
+      </Tab>
+
+      <Tab title="Go" icon="box">
+        ```bash
+        go get github.com/kestrel-run/kestrel-go
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+
+  <Step title="Queue your first job" icon="send" title-type="p">
+    A job has a `type` your workers know how to handle and a JSON `payload`. Kestrel returns the job straight away with the status `queued`.
+
+    <CodeGroup tabs="cURL,Node.js,Python">
+    ```bash
+    curl https://api.kestrel.dev/v1/jobs \
+      -H "Authorization: Bearer $KESTREL_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{"type": "send-welcome-email", "payload": {"userId": "usr_8f2k"}}'
+    ```
+
+    ```javascript
+    import { Kestrel } from "@kestrel/sdk";
+
+    const kestrel = new Kestrel(process.env.KESTREL_API_KEY);
+
+    const job = await kestrel.jobs.create({
+      type: "send-welcome-email",
+      payload: { userId: "usr_8f2k" },
+    });
+    ```
+
+    ```python
+    from kestrel import Kestrel
+
+    kestrel = Kestrel(os.environ["KESTREL_API_KEY"])
+
+    job = kestrel.jobs.create(
+        type="send-welcome-email",
+        payload={"userId": "usr_8f2k"},
+    )
+    ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Check the result" icon="circle-check" title-type="p">
+    Open **Jobs** in the app to watch it run, or fetch it by ID. A finished job has the status `succeeded` and a `completedAt` time.
+
+    ```bash
+    curl https://api.kestrel.dev/v1/jobs/job_3hd92k \
+      -H "Authorization: Bearer $KESTREL_API_KEY"
+    ```
   </Step>
 </Steps>
-
-## 2. Add a new page
-
-<Steps>
-  <Step title="Add a page" icon="file-text" title-type="p">
-    Create a new `page` by clicking on the + button from the left navigation bar of dashboard. If you are using git, create the .mdx file and add to navigation bar using documentation.json
-  </Step>
-</Steps>
-
-## Example onboarding flow (replace with yours)
-
-1. Sign up for an account and verify your email.
-2. Create your first workspace, project, or environment.
-3. Add one integration or data source to connect your existing tools.
-4. Complete a guided action (for example, run your first job or publish your first resource).
-5. Invite a teammate and assign a basic role or permission. /ico
-
-## 3. Connect API Reference (optional)
-
-If you have an API, replace `openapi.yaml` with your real OpenAPI file. If you do not need an API reference, remove that tab either from dashboard or  `documentation.json`.
-
-## API limits
-
-Every plan has its own API rate limits. Keep these in mind when you script your first requests:
-
-<LimitsTable />
-
-See [Rate limits](/rate-limits) for how they are counted.
 
 ## Next steps
 
 <Columns cols="2">
-  <Card title="Core Concepts" href="/concepts" icon="layers" horizontal="false">
-    Keep the mental model simple and easy to scan.
+  <Card title="Authentication" href="/authentication" icon="lock" horizontal="false">
+    Test and live keys, scopes and key rotation.
   </Card>
 
-  <Card title="Authentication" href="/authentication" icon="lock" horizontal="false">
-    Add your real auth flows and security notes.
+  <Card title="Schedule jobs" href="/guides/schedules" icon="calendar-clock" horizontal="false">
+    Run a job later, or on a cron schedule.
+  </Card>
+
+  <Card title="Retries and failures" href="/guides/retries" icon="rotate-cw" horizontal="false">
+    How Kestrel retries failed jobs, and how to tune it.
+  </Card>
+
+  <Card title="Webhooks" href="/guides/webhooks" icon="webhook" horizontal="false">
+    Get notified when a job finishes or fails.
   </Card>
 </Columns>
-

@@ -1,10 +1,6 @@
-export const description = "Home page overview, styled after the External Sources documents-list design"
+export const description = "Home page overview, for the Kestrel docs"
 
 export const HomeOverview = () => {
-  const [tab, setTab] = React.useState("pdf")
-  const [url, setUrl] = React.useState("")
-  const [tried, setTried] = React.useState(false)
-
   const icons = {
     zap: <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />,
     layers: <><path d="m12 2 10 5-10 5L2 7z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></>,
@@ -15,12 +11,12 @@ export const HomeOverview = () => {
   }
 
   const rows = [
-    { href: "/quickstart", icon: "zap", name: "Quickstart", meta: "The minimal setup flow for new readers", tone: "green", section: "Start here", pages: 1 },
-    { href: "/concepts", icon: "layers", name: "Core Concepts", meta: "How pages, navigation and components fit together", tone: "green", section: "Start here", pages: 1 },
-    { href: "/components", icon: "code", name: "Components", meta: "Images, Cards, Code, Callouts, Steps and Tabs", tone: "blue", section: "Documentation", pages: 7 },
-    { href: "/authentication", icon: "lock", name: "Authentication", meta: "Auth guide plus sample endpoints from openapi.yaml", tone: "amber", section: "API Reference", pages: 1 },
-    { href: "/help-center", icon: "help", name: "Help Center", meta: "FAQs, troubleshooting and step-by-step guides", tone: "gray", section: "Help Center", pages: 4 },
-    { href: "/changelog", icon: "clock", name: "Changelog", meta: "What changed in each release", tone: "gray", section: "Changelog", pages: 1 },
+    { href: "/quickstart", icon: "zap", name: "Quickstart", meta: "Create a key and queue your first job in five minutes", tone: "green", section: "Get started", pages: 1 },
+    { href: "/concepts", icon: "layers", name: "Core concepts", meta: "Jobs, queues, workers and schedules", tone: "green", section: "Get started", pages: 1 },
+    { href: "/guides/queue-a-job", icon: "code", name: "Guides", meta: "Queueing, schedules, retries and webhooks", tone: "blue", section: "Guides", pages: 4 },
+    { href: "/authentication", icon: "lock", name: "API reference", meta: "Authentication, rate limits, errors and every endpoint", tone: "amber", section: "API Reference", pages: 9 },
+    { href: "/help-center", icon: "help", name: "Help Center", meta: "Answers to common questions and fixes for common errors", tone: "gray", section: "Help Center", pages: 4 },
+    { href: "/changelog", icon: "clock", name: "Changelog", meta: "New features and changes in each release", tone: "gray", section: "Changelog", pages: 1 },
   ]
 
   const Svg = ({ children, width = 1.8, size }) => (
@@ -32,7 +28,7 @@ export const HomeOverview = () => {
       <div className="dt-head">
         <div className="dt-head-text">
           <span className="dt-title">Browse the documentation</span>
-          <span className="dt-sub">Guides, components and API reference for this site, all in one place.</span>
+          <span className="dt-sub">Guides and API reference for queueing, scheduling and monitoring background jobs.</span>
         </div>
         <a className="dt-btn" href="/quickstart">
           <Svg width={2} size={15}>{icons.zap}</Svg>
@@ -62,8 +58,6 @@ export const HomeOverview = () => {
         ))}
       </div>
 
-      <span className="dt-note">This site ships with placeholder content. Edit the text, links and examples so they match your product before sharing it.</span>
-
       <div className="dt-empty">
         <div className="dt-empty-icon">
           <Svg><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></Svg>
@@ -77,44 +71,6 @@ export const HomeOverview = () => {
         <span className="dt-empty-note">or see what's new in the <a href="/changelog">Changelog</a></span>
       </div>
 
-      <section className="dt-upload" aria-labelledby="dt-upload-title">
-        <div className="dt-upload-head">
-          <span id="dt-upload-title" className="dt-upload-title">Upload source</span>
-          <span className="dt-upload-tag">Preview</span>
-        </div>
-        <div className="dt-seg" role="tablist" aria-label="Kind of source">
-          <button type="button" role="tab" aria-selected={tab === "pdf"} className={"dt-seg-item" + (tab === "pdf" ? " dt-seg-on" : "")} onClick={() => setTab("pdf")}>
-            <Svg size={14}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /></Svg>
-            <span>PDF</span>
-          </button>
-          <button type="button" role="tab" aria-selected={tab === "web"} className={"dt-seg-item" + (tab === "web" ? " dt-seg-on" : "")} onClick={() => setTab("web")}>
-            <Svg size={14}><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></Svg>
-            <span>Website</span>
-          </button>
-        </div>
-        <div className="dt-upload-body" role="tabpanel">
-          {tab === "pdf" ? (
-            <div className="dt-drop">
-              <span className="dt-drop-icon"><Svg size={18}><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M12 12v6" /><path d="m15 15-3-3-3 3" /></Svg></span>
-              <span className="dt-drop-title">Drop PDFs here, or browse</span>
-              <span className="dt-drop-sub">Several at once. Up to 50 MB and 500 pages each.</span>
-            </div>
-          ) : (
-            <div className="dt-web">
-              <div className="dt-web-fields">
-                <label htmlFor="dt-url" className="dt-web-label">Address</label>
-                <input id="dt-url" className="dt-field" type="url" placeholder="https://docs.example.com/guides" value={url} onChange={(e) => { setUrl(e.target.value); setTried(false) }} />
-                <span className="dt-web-help">A single page, or a section and the pages under it. Up to 5 websites, 300 pages each.</span>
-                {tried ? <span className="dt-web-help" role="status">This is a preview, so nothing is sent from this page.</span> : null}
-              </div>
-              <div className="dt-web-actions">
-                <button type="button" className="dt-btn-primary" disabled={url.trim().length === 0} onClick={() => setTried(true)}>Continue</button>
-              </div>
-            </div>
-          )}
-        </div>
-        <span className="dt-upload-note">A preview of the Upload source dialog. Nothing is uploaded from this page.</span>
-      </section>
     </div>
   )
 }

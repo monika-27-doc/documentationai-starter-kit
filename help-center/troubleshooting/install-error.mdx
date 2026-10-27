@@ -1,26 +1,10 @@
 ---
-title: Page Missing in Sidebar
-description: Fix a page that does not appear in navigation.
+title: My jobs stay queued
+description: Why jobs stay in the queued status, and how to get them running.
 ---
-## Symptoms
 
-- A new page file exists but does not show up in the sidebar.
+A job stays `queued` until a worker picks it up. If nothing moves:
 
-- Clicking a nav item shows a 404.
-
-## Fix
-
-<Steps>
-  <Step title="Confirm the file name" icon="file-text" title-type="p">
-    Ensure the file exists.
-  </Step>
-
-  <Step title="Update navigation" icon="settings" title-type="p">
-    Add or fix the matching `path` in `documentation.json` or from navigation menu.
-  </Step>
-
-  <Step title="Publish" icon="refresh-cw" title-type="p">
-    Publish so changes take effect.
-  </Step>
-</Steps>
-
+1. Check that a worker is running and polling the same queue the job is in.
+2. Check that the worker uses a key from the same environment. Test workers never see live jobs.
+3. Open **Queues** in the app. If the queue is paused, click **Resume**.

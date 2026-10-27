@@ -1,192 +1,191 @@
 openapi: '3.0.0'
 info:
   version: 1.0.0
-  title: Sample API
-  description: >
-    This is a sample OpenAPI file included with the starter kit.
-
-    Replace this entire file with your own OpenAPI specification that fully
-    describes your API, including your endpoints, schemas, authentication,
-    and error handling. Use this sample only as a structural reference, not
-    as a starting point for a production API definition.
-  license:
-    name: MIT
+  title: Kestrel API
+  description: Queue, schedule and monitor background jobs.
 servers:
-  - url: https://api.example.com/v1
+  - url: https://api.kestrel.dev/v1
+security:
+  - bearerAuth: []
 paths:
-  /projects:
-    get:
-      summary: List all projects
-      operationId: listProjects
-      parameters:
-        - name: limit
-          in: query
-          description: How many items to return at one time (max 100)
-          required: false
-          schema:
-            type: integer
-            format: int32
-      responses:
-        200:
-          description: An paged array of projects
-          headers:
-            x-next:
-              description: A link to the next page of responses
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Projects'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+  /jobs:
     post:
-      summary: Create project
-      operationId: createProjects
-      responses:
-        201:
-          description: Null response
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /projects/{projectId}:
-    get:
-      summary: Get project info
-      operationId: showProjectById
+      summary: Create a job
+      operationId: createJob
+      tags: [Jobs]
       parameters:
-        - name: projectId
-          in: path
-          required: true
-          description: The id of the project to retrieve
+        - name: Idempotency-Key
+          in: header
+          required: false
+          description: Returns the original job for repeat requests within 24 hours.
           schema:
             type: string
-      responses:
-        200:
-          description: Expected response to a valid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Projects'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /documents:
-    get:
-      summary: List all documents
-      operationId: listDocuments
-      parameters:
-        - name: limit
-          in: query
-          description: How many items to return at one time (max 100)
-          required: false
-          schema:
-            type: integer
-            format: int32
-      responses:
-        200:
-          description: An paged array of documents
-          headers:
-            x-next:
-              description: A link to the next page of responses
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Documents'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    post:
-      summary: Create document
-      operationId: createDocuments
-      responses:
-        201:
-          description: Null response
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /documents/{docId}:
-    get:
-      summary: Get document info
-      operationId: showDocumentById
-      parameters:
-        - name: docId
-          in: path
-          required: true
-          description: The id of the document to retrieve
-          schema:
-            type: string
-      responses:
-        200:
-          description: Expected response to a valid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Documents'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-components:
-  schemas:
-    Project:
-      required:
-        - id
-        - name
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        description:
-          type: string
-    Projects:
-      type: array
-      items:
-        $ref: '#/components/schemas/Project'
-    Document:
-      required:
-        - id
-        - title
-      properties:
-        id:
-          type: integer
-          format: int64
-        title:
-          type: string
+      requestBody:
+        required: true
         content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewJob'
+      responses:
+        '201':
+          description: The job was created and queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    get:
+      summary: List jobs
+      operationId: listJobs
+      tags: [Jobs]
+      parameters:
+        - name: status
+          in: query
+          required: false
+          description: Only return jobs with this status.
+          schema:
+            type: string
+            enum: [queued, running, succeeded, failed, cancelled]
+        - name: limit
+          in: query
+          required: false
+          description: How many jobs to return, up to 100.
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: A page of jobs, newest first.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Job'
+                  nextCursor:
+                    type: string
+                    nullable: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /jobs/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: The job ID, such as job_3hd92k.
+        schema:
           type: string
-    Documents:
-      type: array
-      items:
-        $ref: '#/components/schemas/Document'
+    get:
+      summary: Retrieve a job
+      operationId: getJob
+      tags: [Jobs]
+      responses:
+        '200':
+          description: The job.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Cancel a job
+      operationId: cancelJob
+      tags: [Jobs]
+      description: Cancels a job that hasn't started yet. Running jobs can't be cancelled.
+      responses:
+        '200':
+          description: The cancelled job.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: A secret API key, such as kst_live_... or kst_test_...
+  schemas:
+    NewJob:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          description: The job type your worker handles.
+          example: send-welcome-email
+        queue:
+          type: string
+          default: default
+        payload:
+          type: object
+          description: Any JSON, up to 256 KB.
+          example:
+            userId: usr_8f2k
+        runAt:
+          type: string
+          format: date-time
+          description: Run the job at this time instead of straight away.
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+          example: job_3hd92k
+        type:
+          type: string
+          example: send-welcome-email
+        queue:
+          type: string
+          example: default
+        status:
+          type: string
+          enum: [scheduled, queued, running, succeeded, failed, cancelled]
+          example: queued
+        attempts:
+          type: integer
+          example: 1
+        payload:
+          type: object
+        createdAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
     Error:
-      required:
-        - code
-        - message
+      type: object
       properties:
         code:
-          type: integer
-          format: int32
+          type: string
         message:
           type: string
+  responses:
+    Unauthorized:
+      description: The API key is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: No job has this ID.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: You've reached your plan's rate limit. Retry after the Retry-After header.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

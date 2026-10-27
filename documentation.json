@@ -1,5 +1,5 @@
 {
-  "name": "Starter Kit",
+  "name": "Kestrel",
   "colors": {
     "light": {
       "brand": "#F97316"
@@ -15,7 +15,7 @@
         "icon": "book",
         "groups": [
           {
-            "group": "Start Here",
+            "group": "Get started",
             "icon": "rocket",
             "pages": [
               {
@@ -31,48 +31,37 @@
                 "icon": "zap"
               },
               {
-                "title": "Components",
-                "path": "components",
-                "icon": "code"
+                "title": "Core concepts",
+                "path": "concepts",
+                "icon": "layers"
               }
             ]
           },
           {
-            "group": "Components",
-            "icon": "layers",
+            "group": "Guides",
+            "icon": "book-open",
             "pages": [
               {
-                "title": "Images",
-                "path": "components/images",
-                "icon": "image"
+                "title": "Queue a job",
+                "path": "guides/queue-a-job",
+                "icon": "send"
               },
               {
-                "title": "Cards",
-                "path": "components/cards",
-                "icon": "square"
+                "title": "Schedule jobs",
+                "path": "guides/schedules",
+                "icon": "calendar-clock"
               },
               {
-                "title": "Code",
-                "path": "components/code",
-                "icon": "code"
+                "title": "Retries and failures",
+                "path": "guides/retries",
+                "icon": "rotate-cw"
               },
               {
-                "title": "Callouts",
-                "path": "components/callouts",
-                "icon": "message-square"
-              },
-              {
-                "title": "Steps",
-                "path": "components/steps",
-                "icon": "list-ordered"
-              },
-              {
-                "title": "Tabs",
-                "path": "components/tabs",
-                "icon": "columns"
+                "title": "Webhooks",
+                "path": "guides/webhooks",
+                "icon": "webhook"
               }
-            ],
-            "openapi": "api-reference/playground-upload-test.yaml"
+            ]
           }
         ]
       },
@@ -112,7 +101,7 @@
             ]
           },
           {
-            "group": "Sample Endpoints",
+            "group": "Jobs",
             "openapi": "openapi.yaml"
           }
         ]
@@ -132,7 +121,7 @@
             "expandable": false,
             "pages": [
               {
-                "title": "Documentation Source",
+                "title": "Is there a free plan?",
                 "path": "help-center/faq/getting-started"
               },
               {
@@ -147,7 +136,7 @@
             "expandable": false,
             "pages": [
               {
-                "title": "Page Missing in Sidebar",
+                "title": "My jobs stay queued",
                 "path": "help-center/troubleshooting/install-error"
               }
             ]
@@ -158,7 +147,7 @@
             "expandable": false,
             "pages": [
               {
-                "title": "Create Your First Page",
+                "title": "Run your first worker",
                 "path": "help-center/guides/setup-project"
               }
             ]
@@ -183,40 +172,6 @@
       "src": "styles/home.css"
     }
   ],
-  "seo": {
-    "jsonld": {
-      "organization": {
-        "@id": "https://orama.ai/#organization",
-        "name": "Orama",
-        "legalName": "Orama Inc.",
-        "url": "https://orama.ai",
-        "logo": "https://orama.ai/logo-color.png",
-        "sameAs": [
-          "https://www.linkedin.com/company/orama",
-          "https://www.youtube.com/@orama"
-        ]
-      },
-      "website": {
-        "alternateName": "Orama Academy"
-      },
-      "webpage": {
-        "isAccessibleForFree": true
-      },
-      "article": {
-        "@type": "TechArticle",
-        "proficiencyLevel": "Beginner"
-      },
-      "extra": [
-        {
-          "@type": "SoftwareApplication",
-          "name": "Orama",
-          "applicationCategory": "DeveloperApplication",
-          "operatingSystem": "Web"
-        }
-      ]
-    },
-    "language": "es"
-  },
   "redirects": [
     {
       "source": "/e2e-old-quickstart",

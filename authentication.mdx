@@ -1,57 +1,75 @@
 ---
-title: Authentication (Sample)
-description: Sample guidance for authentication and OpenAPI usage.
+title: Authentication
+description: Authenticate API requests with a secret key, keep test and live traffic apart, and rotate keys safely.
 ---
 
-## Overview
+Every request to the Kestrel API is authenticated with an API key sent as a bearer token. Keys belong to a workspace, and every key in a workspace shares that workspace's [rate limits](/rate-limits).
 
-This is sample content. Replace tokens, URLs, headers, and flows with your real authentication requirements.
+## Set up authentication
 
-<Callout kind="info">
+<Steps>
+  <Step title="Create a key" icon="key" title-type="p">
+    In the Kestrel app, go to **Settings > API keys** and click **Create key**. Give it a name that says where it runs, such as `billing-worker`.
+  </Step>
 
-This site ships with placeholder content for authentication. Update this page and `openapi.yaml` to match your real API before sharing with users.
+  <Step title="Choose an environment" icon="layers" title-type="p">
+    **Test** keys start with `kst_test_` and only see test jobs. **Live** keys start with `kst_live_` and run real work. Use test keys everywhere except production.
+  </Step>
 
-</Callout>
+  <Step title="Pick scopes" icon="shield-check" title-type="p">
+    Give the key only what it needs: `jobs:write` to queue jobs, `jobs:read` to read them, `schedules:write` to manage schedules.
+  </Step>
 
-This API uses OpenAPI to describe endpoints, parameters, and responses. The reference is generated from `openapi.yaml`, so keep that file up to date as your API evolves.
+  <Step title="Store it as a secret" icon="lock" title-type="p">
+    Copy the key once and store it in your secret manager or as an environment variable. Kestrel shows the full key only when you create it.
+  </Step>
+</Steps>
 
-## Authentication
+## Send the key with each request
 
-Use a bearer token in the `Authorization` header for authenticated requests. Replace the base URL and token with values for your own API.
+Pass the key in the `Authorization` header with the `Bearer` prefix. The SDKs do this for you.
 
+<CodeGroup tabs="cURL,Node.js,Python">
 ```bash
-curl https://api.example.com/v1/example \
-  -H "Authorization: Bearer YOUR_TOKEN"
+curl https://api.kestrel.dev/v1/jobs \
+  -H "Authorization: Bearer $KESTREL_API_KEY"
 ```
 
+```javascript
+import { Kestrel } from "@kestrel/sdk";
+
+const kestrel = new Kestrel(process.env.KESTREL_API_KEY);
+```
+
+```python
+from kestrel import Kestrel
+
+kestrel = Kestrel(os.environ["KESTREL_API_KEY"])
+```
+</CodeGroup>
+
 <ParamField header="Authorization" param-type="string" required="true">
-  `Bearer YOUR_TOKEN`
+  `Bearer kst_live_...` or `Bearer kst_test_...`
 </ParamField>
 
-## Keep OpenAPI in sync
+<Callout kind="alert" collapsed="false">
+  Never put a secret key in browser or mobile code. Queue jobs from your backend, or create a short-lived token with `POST /v1/tokens` for client-side use.
+</Callout>
 
-Define your authentication and base settings in `openapi.yaml` so the API Reference stays accurate and consistent.
+## Rotate a key
 
-At a minimum, you should:
+Rotate keys when someone leaves the team or a key may have leaked.
 
-- Define one or more security schemes that describe how clients authenticate (for example, bearer token, API key in a header, or other scheme).
-- Reference those security schemes on operations that require authentication so they are clearly marked as secured.
-- Set the correct base URL and any required global headers (for example, versioning or tenant headers) so example requests are copy-pasteable.
+1. Create a new key with the same scopes.
+2. Deploy it to the services that use the old key.
+3. In **Settings > API keys**, click **Revoke** on the old key. Requests that use it fail with `401` straight away.
 
-When your real authentication flow changes (for example, new header names, token formats, or additional requirements), update `openapi.yaml`. The generated API Reference will then reflect your current auth model without needing to edit each endpoint page by hand.
-
-## Using the API reference
-
-Use the API Reference to explore endpoints, required parameters, and example responses. When you change authentication headers or base URLs, update `openapi.yaml` so the generated reference matches what your clients should use.
-
-## Common mistakes
+## Troubleshooting
 
 <Expandable title="Why am I getting a 401?" default-open="false">
+  The key is missing, mistyped or revoked. Check that the header reads `Authorization: Bearer <key>`, with a space after `Bearer`.
+</Expandable>
 
-Verify that:
-
-- The token is valid and not expired.
-- The token is sent in the `Authorization` header.
-- The header value includes the `Bearer` prefix and a space before the token.
-
+<Expandable title="Why am I getting a 403?" default-open="false">
+  The key is valid but lacks the scope for this request, or you're using a test key to read live jobs. Add the scope in **Settings > API keys**, or switch to the matching environment.
 </Expandable>

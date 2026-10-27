@@ -63,8 +63,8 @@ Every response includes your current limits:
 The API returns `429 Too Many Requests` with a `Retry-After` header. Wait that many seconds, then retry.
 
 ```bash
-curl -i https://api.example.com/v1/projects \
-  -H "Authorization: Bearer $API_KEY"
+curl -i https://api.kestrel.dev/v1/jobs \
+  -H "Authorization: Bearer $KESTREL_API_KEY"
 
 # HTTP/1.1 429 Too Many Requests
 # Retry-After: 12

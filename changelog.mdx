@@ -1,8 +1,9 @@
 ---
 title: Changelog
-description: Release notes for the API and documentation platform.
+description: New features and changes to the Kestrel API.
 ---
-<Update label="2026-10-10" description="Pro plan tier" tags={["plans","rate-limits"]}>
+
+<Update label="2026-10-10" description="Pro plan" tags={["plans","rate-limits"]}>
   ## What's new
 
   The new Pro plan provides 600 requests per minute, 250,000 requests per day, and 25 concurrent requests. It sits between the Free and Enterprise plans.
@@ -12,16 +13,14 @@ description: Release notes for the API and documentation platform.
   The [rate limits](/rate-limits), [plans and billing](/plans-and-billing), and [usage and quotas](/usage-and-quotas) pages now include the Pro tier in their limits tables.
 </Update>
 
-<Update label="2026-01-26" description="Sample Update" tags={["sample"]}>
-  ## What changed
+<Update label="2026-09-02" description="Schedule time zones" tags={["schedules"]}>
+  ## What's new
 
-  - Cleaned up placeholder copy across the starter kit.
-  - Added clearer "sample" messaging to avoid confusion.
+  Schedules accept a `timezone`, so a `0 9 * * *` schedule runs at 9:00 local time all year, across daylight saving changes. See [Schedule jobs](/guides/schedules).
 </Update>
 
-<Update label="2025-12-10" description="Sample Update" tags={["sample"]}>
-  ## What changed
+<Update label="2026-07-15" description="Webhook signing" tags={["webhooks","security"]}>
+  ## What's new
 
-  - Simplified the Quickstart steps.
-  - Trimmed Help Center examples.
+  Every webhook delivery now carries a `Kestrel-Signature` header, and each SDK has a `webhooks.verify` helper. See [Webhooks](/guides/webhooks).
 </Update>

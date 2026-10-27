@@ -1,0 +1,40 @@
+---
+title: Webhooks
+description: Get an HTTP callback when a job succeeds or fails, and verify that it came from Kestrel.
+---
+
+Webhooks tell your app when something happens to a job, so you don't have to poll for status.
+
+## Events
+
+| Event           | Sent when                              |
+| --------------- | -------------------------------------- |
+| `job.succeeded` | A job finishes successfully            |
+| `job.failed`    | A job fails and has no retries left    |
+| `job.cancelled` | A job is cancelled before it runs      |
+
+## Add an endpoint
+
+<Steps>
+  <Step title="Create the endpoint" icon="link" title-type="p">
+    In the app, go to **Settings > Webhooks**, click **Add endpoint**, enter your HTTPS URL and choose the events to send.
+  </Step>
+
+  <Step title="Copy the signing secret" icon="key" title-type="p">
+    Each endpoint has its own secret, starting with `whsec_`. You use it to verify deliveries.
+  </Step>
+
+  <Step title="Verify every delivery" icon="shield-check" title-type="p">
+    Check the `Kestrel-Signature` header before you trust the body.
+
+    ```javascript
+    const event = kestrel.webhooks.verify(
+      rawBody,
+      req.headers["kestrel-signature"],
+      process.env.KESTREL_WEBHOOK_SECRET,
+    );
+    ```
+  </Step>
+</Steps>
+
+Return a `2xx` status within 10 seconds. Kestrel retries failed deliveries for up to 24 hours.

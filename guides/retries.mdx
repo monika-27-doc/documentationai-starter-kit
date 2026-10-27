@@ -1,0 +1,30 @@
+---
+title: Retries and failures
+description: How Kestrel retries failed jobs, and what happens when the retries run out.
+---
+
+When a worker reports an error, or stops responding for longer than the job's timeout, Kestrel retries the job automatically.
+
+## Retry schedule
+
+Kestrel retries a failed job up to **3 times**, waiting longer before each attempt:
+
+| Attempt   | Wait before it runs |
+| --------- | ------------------- |
+| 2nd       | 10 seconds          |
+| 3rd       | 1 minute            |
+| 4th       | 5 minutes           |
+
+The number of retries and the delays are the same for every job.
+
+## When retries run out
+
+After the last attempt fails, the job's status becomes `failed` and Kestrel keeps its error and the logs from every attempt for 30 days. Open the job in **Jobs** to see them, or fetch it with `GET /v1/jobs/{id}`.
+
+<Callout kind="info" collapsed="false">
+  Subscribe to the `job.failed` webhook to hear about failed jobs as they happen. See [Webhooks](/guides/webhooks).
+</Callout>
+
+## Make jobs safe to retry
+
+A job may run more than once, so write workers that can repeat without side effects. Check whether the work is already done before doing it, for example by looking up the invoice before generating its PDF again.

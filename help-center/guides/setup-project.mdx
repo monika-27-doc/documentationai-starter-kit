@@ -1,20 +1,20 @@
 ---
-title: Create Your First Doc Page
-description: A short guide to adding a new page to this starter kit.
+title: Run your first worker
+description: Start a Node.js worker that picks up jobs from the default queue.
 ---
-## Overview
 
-Use this guide as a sample for your real setup instructions.
+A worker is a long-running process that takes jobs from a queue and runs them.
 
-## Steps
+```javascript
+import { Kestrel } from "@kestrel/sdk";
 
-<Steps>
-  <Step title="Create a new file" icon="file-plus" title-type="p">
-    Add a page using + and start with a title and short description.
-  </Step>
+const kestrel = new Kestrel(process.env.KESTREL_API_KEY);
 
-  <Step title="Write the first section" icon="edit" title-type="p">
-    Add a simple header and a few sentences users can scan quickly.
-  </Step>
-</Steps>
+kestrel.worker("default", {
+  "send-welcome-email": async ({ payload }) => {
+    await sendWelcomeEmail(payload.userId);
+  },
+});
+```
 
+Run it with `node worker.js`. Throwing an error marks the attempt as failed, and Kestrel retries it. See [Retries and failures](/guides/retries).
