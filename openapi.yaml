@@ -33,6 +33,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Job'
+        '400':
+          description: The retry policy is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '429':
@@ -135,6 +141,24 @@ components:
           type: string
           format: date-time
           description: Run the job at this time instead of straight away.
+        retryPolicy:
+          type: object
+          description: Omitted values use defaults for retry calculation. Exponential backoff doubles from the initial delay, fixed backoff repeats that delay, and delays are capped at 3600 seconds.
+          properties:
+            maxRetries:
+              type: integer
+              minimum: 0
+              maximum: 10
+              default: 5
+            backoff:
+              type: string
+              enum: [exponential, fixed]
+              default: exponential
+            initialDelaySeconds:
+              type: integer
+              minimum: 1
+              maximum: 3600
+              default: 10
     Job:
       type: object
       properties:
@@ -163,6 +187,22 @@ components:
           type: string
           format: date-time
           nullable: true
+        retryPolicy:
+          type: object
+          nullable: true
+          description: Null when the request omitted the policy; otherwise contains the supplied object, including partial objects. Exponential backoff doubles from the initial delay, fixed backoff repeats that delay, and delays are capped at 3600 seconds.
+          properties:
+            maxRetries:
+              type: integer
+              minimum: 0
+              maximum: 10
+            backoff:
+              type: string
+              enum: [exponential, fixed]
+            initialDelaySeconds:
+              type: integer
+              minimum: 1
+              maximum: 3600
     Error:
       type: object
       properties:

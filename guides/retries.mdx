@@ -7,15 +7,25 @@ When a worker reports an error, or stops responding for longer than the job's ti
 
 ## Retry schedule
 
-Kestrel retries a failed job up to **3 times**, waiting longer before each attempt:
+Kestrel retries a failed job up to **5 times** by default, using exponential backoff that starts at 10 seconds. Override the policy for an individual job with `retryPolicy` when you create it:
 
-| Attempt   | Wait before it runs |
-| --------- | ------------------- |
-| 2nd       | 10 seconds          |
-| 3rd       | 1 minute            |
-| 4th       | 5 minutes           |
+```json
+{
+  "retryPolicy": {
+    "maxRetries": 5,
+    "backoff": "exponential",
+    "initialDelaySeconds": 10
+  }
+}
+```
 
-The number of retries and the delays are the same for every job.
+All fields are optional:
+
+- **`maxRetries`**: Integer from `0` to `10`. Defaults to `5`.
+- **`backoff`**: `exponential` or `fixed`. Defaults to `exponential`.
+- **`initialDelaySeconds`**: Integer from `1` to `3600`. Defaults to `10`.
+
+Exponential backoff doubles the delay after each attempt. Fixed backoff uses the same delay each time. Both strategies cap the delay at one hour. Partial policies inherit omitted values for retry calculation. Invalid explicitly checked values return HTTP `400`.
 
 ## When retries run out
 
