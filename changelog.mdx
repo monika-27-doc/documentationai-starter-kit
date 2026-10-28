@@ -3,6 +3,22 @@ title: Changelog
 description: New features and changes to the Kestrel API.
 ---
 
+<Update label="2026-10-28" description="Configurable retry policy" tags={["jobs","retries"]}>
+  ## What's new
+
+  Jobs accept an optional `retryPolicy` when you create them, so each job can set its own retry behavior:
+
+  - **`maxRetries`**: from `0` to `10`. Defaults to `5`.
+  - **`backoff`**: `exponential` or `fixed`. Defaults to `exponential`.
+  - **`initialDelaySeconds`**: from `1` to `3600`. Defaults to `10`.
+
+  Delays are capped at one hour. An invalid `retryPolicy` returns HTTP `400` with code `invalid_request`. See [Retries and failures](/guides/retries).
+
+  ## Changed defaults
+
+  Jobs created without a `retryPolicy` now retry up to 5 times instead of 3, with exponential backoff starting at 10 seconds (10s, 20s, 40s, 80s, 160s) in place of the previous fixed 10s, 60s, 300s schedule.
+</Update>
+
 <Update label="2026-10-10" description="Pro plan" tags={["plans","rate-limits"]}>
   ## What's new
 
