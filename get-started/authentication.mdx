@@ -1,0 +1,25 @@
+---
+title: Authentication
+---
+
+Every request needs a bearer token in the `Authorization` header.
+
+<CodeGroup>
+  ```bash cURL
+  curl https://api.larkspur.dev/v1/deliveries \
+    -H "Authorization: Bearer $LARKSPUR_API_KEY"
+  ```
+
+  ```python Python
+  import requests
+
+  requests.get(
+      "https://api.larkspur.dev/v1/deliveries",
+      headers={"Authorization": f"Bearer {api_key}"},
+  )
+  ```
+</CodeGroup>
+
+<Callout kind="alert">
+  Never ship a live key in client-side code.
+</Callout>

@@ -1,217 +1,76 @@
 {
-  "name": "Kestrel",
+  "name": "Larkspur API",
+  "initialRoute": "get-started/quickstart",
+  "template": "classic",
+  "icons": {
+    "library": "fontawesome"
+  },
   "colors": {
     "light": {
-      "brand": "#F97316"
+      "brand": "#2563eb"
     },
     "dark": {
-      "brand": "#FDBA74"
+      "brand": "#2563eb"
     }
-  },
-  "navigation": {
-    "tabs": [
-      {
-        "tab": "Documentation",
-        "icon": "book",
-        "groups": [
-          {
-            "group": "Get started",
-            "icon": "rocket",
-            "pages": [
-              {
-                "title": "Introduction",
-                "path": "introduction",
-                "icon": "home",
-                "show-toc": false,
-                "content-width": "wide"
-              },
-              {
-                "title": "Quickstart",
-                "path": "quickstart",
-                "icon": "zap"
-              },
-              {
-                "title": "Core concepts",
-                "path": "concepts",
-                "icon": "layers"
-              }
-            ]
-          },
-          {
-            "group": "Guides",
-            "icon": "book-open",
-            "pages": [
-              {
-                "title": "Queue a job",
-                "path": "guides/queue-a-job",
-                "icon": "send"
-              },
-              {
-                "title": "Schedule jobs",
-                "path": "guides/schedules",
-                "icon": "calendar-clock"
-              },
-              {
-                "title": "Retries and failures",
-                "path": "guides/retries",
-                "icon": "rotate-cw"
-              },
-              {
-                "title": "Webhooks",
-                "path": "guides/webhooks",
-                "icon": "webhook"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API Reference",
-        "icon": "code",
-        "groups": [
-          {
-            "group": "Overview",
-            "icon": "file-text",
-            "pages": [
-              {
-                "title": "Authentication",
-                "path": "authentication",
-                "icon": "lock"
-              },
-              {
-                "title": "Rate limits",
-                "path": "rate-limits",
-                "icon": "gauge"
-              },
-              {
-                "title": "Errors",
-                "path": "errors",
-                "icon": "alert-circle"
-              },
-              {
-                "title": "Usage and quotas",
-                "path": "usage-and-quotas",
-                "icon": "bar-chart-3"
-              },
-              {
-                "title": "Plans and billing",
-                "path": "plans-and-billing",
-                "icon": "credit-card"
-              }
-            ]
-          },
-          {
-            "group": "Jobs",
-            "openapi": "openapi.yaml"
-          }
-        ]
-      },
-      {
-        "tab": "Help Center",
-        "icon": "help-circle",
-        "pages": [
-          {
-            "title": "Help Center",
-            "path": "help-center",
-            "icon": "home"
-          },
-          {
-            "group": "FAQs",
-            "icon": "help-circle",
-            "expandable": false,
-            "pages": [
-              {
-                "title": "Is there a free plan?",
-                "path": "help-center/faq/getting-started"
-              },
-              {
-                "title": "Why am I getting 429 errors?",
-                "path": "help-center/faq/rate-limit-errors"
-              }
-            ]
-          },
-          {
-            "group": "Troubleshooting",
-            "icon": "alert-triangle",
-            "expandable": false,
-            "pages": [
-              {
-                "title": "My jobs stay queued",
-                "path": "help-center/troubleshooting/install-error"
-              }
-            ]
-          },
-          {
-            "group": "Guides",
-            "icon": "book-open",
-            "expandable": false,
-            "pages": [
-              {
-                "title": "Run your first worker",
-                "path": "help-center/guides/setup-project"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Changelog",
-        "icon": "clock",
-        "pages": [
-          {
-            "title": "Changelog",
-            "path": "changelog",
-            "icon": "history"
-          }
-        ]
-      }
-    ]
   },
   "customCss": [
     {
-      "src": "styles/home.css"
+      "src": "styles/migration.css"
     }
   ],
   "redirects": [
     {
-      "source": "/e2e-old-quickstart",
-      "destination": "/quickstart",
-      "statusCode": 308
+      "source": "/api-reference/deliveries/list-deliveries",
+      "destination": "/api-reference/get-deliveries"
     },
     {
-      "source": "/e2e-explicit",
-      "destination": "/quickstart",
-      "statusCode": 308
+      "source": "/api-reference/deliveries/create-delivery",
+      "destination": "/api-reference/post-deliveries"
     },
     {
-      "source": "/e2e-explicit.md",
-      "destination": "/components.md",
-      "statusCode": 308
-    },
-    {
-      "source": "/e2e-anchor",
-      "destination": "/components#quick-component-tour",
-      "statusCode": 308
-    },
-    {
-      "source": "/e2e-dest-query",
-      "destination": "/quickstart?tab=web",
-      "statusCode": 308
-    },
-    {
-      "source": "/e2e-external",
-      "destination": "https://example.com/moved",
-      "statusCode": 308
-    },
-    {
-      "source": "/e2e-root",
-      "destination": "/",
-      "statusCode": 307
-    },
-    {
-      "source": "/e2e-blog/:slug",
-      "destination": "/:slug",
-      "statusCode": 308
+      "source": "/api-reference/deliveries/get-delivery",
+      "destination": "/api-reference/get-deliveries-id"
     }
-  ]
+  ],
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get started",
+        "pages": [
+          {
+            "title": "Quickstart",
+            "path": "get-started/quickstart",
+            "icon": "lucide:zap"
+          },
+          {
+            "title": "Authentication",
+            "path": "get-started/authentication",
+            "icon": "lucide:key"
+          }
+        ],
+        "icon": "lucide:rocket"
+      },
+      {
+        "group": "Guides",
+        "pages": [
+          {
+            "title": "Webhooks",
+            "path": "guides/webhooks",
+            "icon": "lucide:webhook"
+          },
+          {
+            "title": "Rate limits",
+            "path": "guides/rate-limits",
+            "icon": "lucide:gauge"
+          }
+        ],
+        "icon": "lucide:book-open"
+      },
+      {
+        "group": "API Reference",
+        "openapi": "api-reference/c26b5e25cb7de7b02ed75a7e24b42484c282e04379ce011f055c31614739f86a.json",
+        "icon": "lucide:code"
+      }
+    ]
+  }
 }

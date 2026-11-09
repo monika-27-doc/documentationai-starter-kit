@@ -1,0 +1,168 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Larkspur API",
+    "version": "1.0.0",
+    "description": "Schedule and track deliveries."
+  },
+  "servers": [
+    {
+      "url": "https://api.larkspur.dev/v1"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/deliveries": {
+      "get": {
+        "operationId": "listDeliveries",
+        "summary": "List deliveries",
+        "tags": [
+          "Deliveries"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "in_transit",
+                "completed"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of deliveries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Delivery"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createDelivery",
+        "summary": "Create a delivery",
+        "tags": [
+          "Deliveries"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeliveryInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created delivery",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Delivery"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deliveries/{id}": {
+      "get": {
+        "operationId": "getDelivery",
+        "summary": "Get a delivery",
+        "tags": [
+          "Deliveries"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The delivery",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Delivery"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "DeliveryInput": {
+        "type": "object",
+        "required": [
+          "pickup",
+          "dropoff"
+        ],
+        "properties": {
+          "pickup": {
+            "type": "string",
+            "example": "12 Harbour St"
+          },
+          "dropoff": {
+            "type": "string",
+            "example": "48 Mill Lane"
+          }
+        }
+      },
+      "Delivery": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "dlv_8f2c"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "in_transit",
+              "completed"
+            ]
+          },
+          "pickup": {
+            "type": "string"
+          },
+          "dropoff": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+---
+title: Quickstart
+---
+
+<Steps>
+  ### Get an API key
+
+  Create a key in the Larkspur dashboard under **Settings › API keys**.
+
+  ### Create a delivery
+
+  ```bash
+  curl -X POST https://api.larkspur.dev/v1/deliveries \
+    -H "Authorization: Bearer $LARKSPUR_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{"pickup": "12 Harbour St", "dropoff": "48 Mill Lane"}'
+  ```
+
+  ### Track it
+
+  Poll `GET /v1/deliveries/{id}` or subscribe to webhooks.
+</Steps>
+
+<Callout kind="info">
+  Test keys start with `lk_test_` and never dispatch a real courier.
+</Callout>
