@@ -1,0 +1,75 @@
+---
+title: Authentication
+description: Authenticate API requests with a secret key, keep test and live traffic apart, and rotate keys safely.
+---
+
+Every request to the Kestrel API is authenticated with an API key sent as a bearer token. Keys belong to a workspace, and every key in a workspace shares that workspace's [rate limits](/rate-limits).
+
+## Set up authentication
+
+<Steps>
+  <Step title="Create a key" icon="key" title-type="p">
+    In the Kestrel app, go to **Settings > API keys** and click **Create key**. Give it a name that says where it runs, such as `billing-worker`.
+  </Step>
+
+  <Step title="Choose an environment" icon="layers" title-type="p">
+    **Test** keys start with `kst_test_` and only see test jobs. **Live** keys start with `kst_live_` and run real work. Use test keys everywhere except production.
+  </Step>
+
+  <Step title="Pick scopes" icon="shield-check" title-type="p">
+    Give the key only what it needs: `jobs:write` to queue jobs, `jobs:read` to read them, `schedules:write` to manage schedules.
+  </Step>
+
+  <Step title="Store it as a secret" icon="lock" title-type="p">
+    Copy the key once and store it in your secret manager or as an environment variable. Kestrel shows the full key only when you create it.
+  </Step>
+</Steps>
+
+## Send the key with each request
+
+Pass the key in the `Authorization` header with the `Bearer` prefix. The SDKs do this for you.
+
+<CodeGroup tabs="cURL,Node.js,Python">
+```bash
+curl https://api.kestrel.dev/v1/jobs \
+  -H "Authorization: Bearer $KESTREL_API_KEY"
+```
+
+```javascript
+import { Kestrel } from "@kestrel/sdk";
+
+const kestrel = new Kestrel(process.env.KESTREL_API_KEY);
+```
+
+```python
+from kestrel import Kestrel
+
+kestrel = Kestrel(os.environ["KESTREL_API_KEY"])
+```
+</CodeGroup>
+
+<ParamField header="Authorization" param-type="string" required="true">
+  `Bearer kst_live_...` or `Bearer kst_test_...`
+</ParamField>
+
+<Callout kind="alert" collapsed="false">
+  Never put a secret key in browser or mobile code. Queue jobs from your backend, or create a short-lived token with `POST /v1/tokens` for client-side use.
+</Callout>
+
+## Rotate a key
+
+Rotate keys when someone leaves the team or a key may have leaked.
+
+1. Create a new key with the same scopes.
+2. Deploy it to the services that use the old key.
+3. In **Settings > API keys**, click **Revoke** on the old key. Requests that use it fail with `401` straight away.
+
+## Troubleshooting
+
+<Expandable title="Why am I getting a 401?" default-open="false">
+  The key is missing, mistyped or revoked. Check that the header reads `Authorization: Bearer <key>`, with a space after `Bearer`.
+</Expandable>
+
+<Expandable title="Why am I getting a 403?" default-open="false">
+  The key is valid but lacks the scope for this request, or you're using a test key to read live jobs. Add the scope in **Settings > API keys**, or switch to the matching environment.
+</Expandable>

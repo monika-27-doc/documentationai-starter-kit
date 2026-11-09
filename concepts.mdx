@@ -1,0 +1,38 @@
+---
+title: Core concepts
+description: Jobs, queues, workers and schedules, and how they fit together in Kestrel.
+---
+
+Kestrel has four building blocks. Once you know them, the rest of the API follows.
+
+<Columns cols="2">
+  <Card title="Jobs" icon="box" horizontal="false">
+    One unit of work, such as sending an email. A job has a `type`, a JSON `payload` and a status.
+  </Card>
+
+  <Card title="Queues" icon="list" horizontal="false">
+    Jobs wait in a named queue until a worker picks them up. Each queue has its own concurrency limit.
+  </Card>
+
+  <Card title="Workers" icon="cpu" horizontal="false">
+    Your code. A worker polls a queue, runs the job and reports success or failure back to Kestrel.
+  </Card>
+
+  <Card title="Schedules" icon="calendar-clock" horizontal="false">
+    Create jobs later or on a cron expression, without running your own scheduler.
+  </Card>
+</Columns>
+
+## The life of a job
+
+Every job moves through the same statuses:
+
+| Status      | Meaning                                                 |
+| ----------- | ------------------------------------------------------- |
+| `queued`    | Waiting for a worker                                    |
+| `running`   | A worker has picked it up                               |
+| `succeeded` | The worker reported success                             |
+| `failed`    | The worker reported an error, and retries are used up   |
+| `cancelled` | Cancelled with `DELETE /v1/jobs/{id}` before it ran     |
+
+A failed attempt doesn't fail the job straight away. Kestrel retries it first. See [Retries and failures](/guides/retries).

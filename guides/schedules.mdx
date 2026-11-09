@@ -1,0 +1,35 @@
+---
+title: Schedule jobs
+description: Run a job at a set time, or on a recurring cron schedule.
+---
+
+Kestrel can create jobs for you later, so you don't need to run your own scheduler.
+
+<Tabs>
+  <Tab title="Run once, later" icon="clock">
+    Pass `runAt` when you create the job. Kestrel keeps it as `scheduled` until that time, then queues it.
+
+    ```javascript
+    await kestrel.jobs.create({
+      type: "send-trial-reminder",
+      payload: { userId: "usr_8f2k" },
+      runAt: "2026-11-03T09:00:00Z",
+    });
+    ```
+  </Tab>
+
+  <Tab title="Recurring" icon="repeat">
+    Create a schedule with a cron expression and a time zone. Kestrel creates a new job on every tick.
+
+    ```javascript
+    await kestrel.schedules.create({
+      name: "nightly-usage-report",
+      cron: "0 2 * * *",
+      timezone: "Europe/London",
+      job: { type: "build-usage-report" },
+    });
+    ```
+  </Tab>
+</Tabs>
+
+Pause a schedule from **Schedules** in the app, or with `POST /v1/schedules/{id}/pause`. Paused schedules skip their ticks; they don't catch up when resumed.

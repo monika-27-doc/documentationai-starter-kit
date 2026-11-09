@@ -1,0 +1,33 @@
+---
+title: Queue a job
+description: Create jobs with a type and payload, pick a queue, and avoid duplicates with idempotency keys.
+---
+
+Create a job with `POST /v1/jobs`. Kestrel stores it and returns straight away, so your request handler never waits for the work itself.
+
+```javascript
+const job = await kestrel.jobs.create({
+  type: "generate-invoice-pdf",
+  queue: "billing",
+  payload: { invoiceId: "inv_20931" },
+});
+```
+
+## Choose a queue
+
+Jobs go to the `default` queue unless you name one. Use separate queues for work with different urgency, so a backlog of exports never delays password-reset emails.
+
+## Avoid duplicate jobs
+
+Send an `Idempotency-Key` header when a request might be retried. Kestrel returns the original job for any repeat within 24 hours instead of creating a second one.
+
+```bash
+curl https://api.kestrel.dev/v1/jobs \
+  -H "Authorization: Bearer $KESTREL_API_KEY" \
+  -H "Idempotency-Key: invoice-inv_20931" \
+  -d '{"type": "generate-invoice-pdf", "payload": {"invoiceId": "inv_20931"}}'
+```
+
+<Callout kind="info" collapsed="false">
+  Payloads can be up to 256 KB. For larger inputs, upload the file to your own storage and pass its URL.
+</Callout>

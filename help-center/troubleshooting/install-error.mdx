@@ -1,0 +1,10 @@
+---
+title: My jobs stay queued
+description: Why jobs stay in the queued status, and how to get them running.
+---
+
+A job stays `queued` until a worker picks it up. If nothing moves:
+
+1. Check that a worker is running and polling the same queue the job is in.
+2. Check that the worker uses a key from the same environment. Test workers never see live jobs.
+3. Open **Queues** in the app. If the queue is paused, click **Resume**.

@@ -1,0 +1,144 @@
+openapi: 3.1.0
+info:
+  title: Playground Upload Test
+  version: 1.0.0
+  description: >
+    Test API for the playground file-upload feature. Every endpoint points at
+    httpbin.org, which echoes back exactly what it received.
+servers:
+  - url: https://httpbin.org
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+paths:
+  /anything/upload:
+    post:
+      summary: Upload files (multipart)
+      description: One file, several files, a 3.1 file field, a base64 field and plain fields.
+      operationId: uploadFiles
+      tags: [Uploads]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [document]
+              properties:
+                document:
+                  type: string
+                  format: binary
+                  description: A single file (OpenAPI 3.0 style).
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Several files at once.
+                avatar:
+                  type: string
+                  contentMediaType: image/png
+                  description: A single file (OpenAPI 3.1 style).
+                thumbnail_b64:
+                  type: string
+                  contentMediaType: image/png
+                  contentEncoding: base64
+                  description: Base64 text. Should stay a text input.
+                note:
+                  type: string
+                  description: A plain text field.
+                  example: hello from the playground
+                metadata:
+                  type: object
+                  description: An object field, sent as JSON text.
+                  properties:
+                    source:
+                      type: string
+      responses:
+        '200':
+          description: httpbin echo of the request.
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /anything/raw:
+    post:
+      summary: Upload a raw file
+      description: The whole request body is one file.
+      operationId: uploadRawFile
+      tags: [Uploads]
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+              description: The file to send as the request body.
+      responses:
+        '200':
+          description: httpbin echo of the request.
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /anything/mixed:
+    post:
+      summary: JSON or multipart
+      description: Offers both formats. Switch the Content-Type in the playground.
+      operationId: createWithOptionalFile
+      tags: [Uploads]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: httpbin echo of the request.
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /anything/json:
+    post:
+      summary: Plain JSON (unchanged)
+      description: Regression check. No file fields.
+      operationId: createJson
+      tags: [Regression]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                count:
+                  type: integer
+      responses:
+        '200':
+          description: httpbin echo of the request.
+          content:
+            application/json:
+              schema:
+                type: object

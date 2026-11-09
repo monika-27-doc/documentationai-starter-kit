@@ -1,0 +1,231 @@
+openapi: '3.0.0'
+info:
+  version: 1.0.0
+  title: Kestrel API
+  description: Queue, schedule and monitor background jobs.
+servers:
+  - url: https://api.kestrel.dev/v1
+security:
+  - bearerAuth: []
+paths:
+  /jobs:
+    post:
+      summary: Create a job
+      operationId: createJob
+      tags: [Jobs]
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: false
+          description: Returns the original job for repeat requests within 24 hours.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewJob'
+      responses:
+        '201':
+          description: The job was created and queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '400':
+          description: The retry policy is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    get:
+      summary: List jobs
+      operationId: listJobs
+      tags: [Jobs]
+      parameters:
+        - name: status
+          in: query
+          required: false
+          description: Only return jobs with this status.
+          schema:
+            type: string
+            enum: [queued, running, succeeded, failed, cancelled]
+        - name: limit
+          in: query
+          required: false
+          description: How many jobs to return, up to 100.
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: A page of jobs, newest first.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Job'
+                  nextCursor:
+                    type: string
+                    nullable: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /jobs/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: The job ID, such as job_3hd92k.
+        schema:
+          type: string
+    get:
+      summary: Retrieve a job
+      operationId: getJob
+      tags: [Jobs]
+      responses:
+        '200':
+          description: The job.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Cancel a job
+      operationId: cancelJob
+      tags: [Jobs]
+      description: Cancels a job that hasn't started yet. Running jobs can't be cancelled.
+      responses:
+        '200':
+          description: The cancelled job.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: A secret API key, such as kst_live_... or kst_test_...
+  schemas:
+    NewJob:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          description: The job type your worker handles.
+          example: send-welcome-email
+        queue:
+          type: string
+          default: default
+        payload:
+          type: object
+          description: Any JSON, up to 256 KB.
+          example:
+            userId: usr_8f2k
+        runAt:
+          type: string
+          format: date-time
+          description: Run the job at this time instead of straight away.
+        retryPolicy:
+          type: object
+          description: Omitted values use defaults for retry calculation. Exponential backoff doubles from the initial delay, fixed backoff repeats that delay, and delays are capped at 3600 seconds.
+          properties:
+            maxRetries:
+              type: integer
+              minimum: 0
+              maximum: 10
+              default: 5
+            backoff:
+              type: string
+              enum: [exponential, fixed]
+              default: exponential
+            initialDelaySeconds:
+              type: integer
+              minimum: 1
+              maximum: 3600
+              default: 10
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+          example: job_3hd92k
+        type:
+          type: string
+          example: send-welcome-email
+        queue:
+          type: string
+          example: default
+        status:
+          type: string
+          enum: [scheduled, queued, running, succeeded, failed, cancelled]
+          example: queued
+        attempts:
+          type: integer
+          example: 1
+        payload:
+          type: object
+        createdAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+        retryPolicy:
+          type: object
+          nullable: true
+          description: Null when the request omitted the policy; otherwise contains the supplied object, including partial objects. Exponential backoff doubles from the initial delay, fixed backoff repeats that delay, and delays are capped at 3600 seconds.
+          properties:
+            maxRetries:
+              type: integer
+              minimum: 0
+              maximum: 10
+            backoff:
+              type: string
+              enum: [exponential, fixed]
+            initialDelaySeconds:
+              type: integer
+              minimum: 1
+              maximum: 3600
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+  responses:
+    Unauthorized:
+      description: The API key is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: No job has this ID.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: You've reached your plan's rate limit. Retry after the Retry-After header.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
